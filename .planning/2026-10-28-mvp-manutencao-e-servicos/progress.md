@@ -34,4 +34,7 @@
 | useParams em client component (prerender dinâmico) | convertido para server component com params prop |
 
 ### Next Step
-Aguardar confirmação do usuário sobre conta/projeto Supabase real para rodar schema.sql, configurar .env.local e integrar frontend (substituir mocks por services). Alternativamente, continuar com integração dos services usando mocks de fallback.
+MVP preparado e commitado (commit inicial). Deploy/integração real (Supabase + Vercel) fica a cargo do usuário conforme README.md. Evoluções futuras listadas na Phase 10 do task_plan.md.
+
+### Commit inicial
+- feat: MVP Manutenção e Serviços (Next.js + Tailwind + Supabase prep)
