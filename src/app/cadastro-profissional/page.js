@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { validarSolicitacaoCadastro } from "@/lib/validacoes";
 import { enviarSolicitacaoCadastro } from "@/services/orcamentos.service";
+import { CATEGORIAS_PADRAO as CATEGORIAS } from "@/lib/categorias";
 
 export default function CadastroProfissionalPage() {
   const [form, setForm] = useState({
@@ -86,9 +87,11 @@ export default function CadastroProfissionalPage() {
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
           >
             <option value="">Selecione</option>
-            <option value="Reformas">Reformas</option>
-            <option value="Computadores">Computadores</option>
-            <option value="Celulares">Celulares</option>
+            {CATEGORIAS.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
           </select>
         </div>
         <div>

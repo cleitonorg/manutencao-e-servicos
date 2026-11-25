@@ -1,7 +1,6 @@
 import Link from "next/link";
 import AbaCategorias from "@/components/AbaCategorias";
-
-const CATEGORIAS = ["Reformas", "Computadores", "Celulares"];
+import { CATEGORIAS_PADRAO as CATEGORIAS } from "@/lib/categorias";
 
 export default function Home() {
   return (

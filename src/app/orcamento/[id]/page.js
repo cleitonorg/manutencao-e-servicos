@@ -1,13 +1,9 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import FormOrcamento from "@/components/FormOrcamento";
-
-// Dados de exemplo (mock)
-const PROFISSIONAIS = {
-  1: { id: 1, nome: "João Silva" },
-  2: { id: 2, nome: "Maria Souza" },
-  3: { id: 3, nome: "Carlos Lima" },
-};
+import { isSupabaseConfigurado } from "@/lib/supabase";
+import { obterProfissionalPorId } from "@/services/profissionais.service";
+import { NOMES_PROFISSIONAIS_MOCK } from "@/lib/mocks";
 
 export default function OrcamentoPage({ params }) {
   return (
@@ -27,7 +23,12 @@ function CarregandoFormulario() {
 
 async function FormularioOrcamento({ params }) {
   const { id } = await params;
-  const prof = PROFISSIONAIS[id];
+  let prof = null;
+  if (isSupabaseConfigurado()) {
+    const { data, error } = await obterProfissionalPorId(id);
+    if (!error && data) prof = data;
+  }
+  if (!prof) prof = NOMES_PROFISSIONAIS_MOCK[id];
 
   if (!prof) {
     return (

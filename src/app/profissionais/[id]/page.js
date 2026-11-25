@@ -1,33 +1,9 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import GaleriaPortfolio from "@/components/GaleriaPortfolio";
-
-// Dados de exemplo (mock)
-const PROFISSIONAIS = {
-  1: {
-    id: 1,
-    nome: "João Silva",
-    categoria: "Reformas",
-    cidade: "Serra dos Aimorés",
-    bairro: "Centro",
-    telefone_whatsapp: "5533999999999",
-    descricao:
-      "Profissional com mais de 10 anos de experiência em reformas residenciais.",
-    valor_base: "50,00",
-    portfolio: [
-      { id: 1, titulo: "Reforma de banheiro", imagem_url: "" },
-      { id: 2, titulo: "Pintura residencial", imagem_url: "" },
-    ],
-    referencias: [
-      {
-        id: 1,
-        nome_cliente: "Ana P.",
-        comentario: "Excelente trabalho, pontual e caprichoso.",
-        nota: 5,
-      },
-    ],
-  },
-};
+import { isSupabaseConfigurado } from "@/lib/supabase";
+import { obterProfissionalPorId, obterPortfolio, obterReferencias } from "@/services/profissionais.service";
+import { PERFIS_MOCK } from "@/lib/mocks";
 
 export default function ProfissionalPerfilPage({ params }) {
   return (
@@ -47,8 +23,12 @@ function CarregandoPerfil() {
 
 async function PerfilProfissional({ params }) {
   const { id } = await params;
-  const prof = PROFISSIONAIS[id];
-
+  let prof = null;
+  if (isSupabaseConfigurado()) {
+    const { data, error } = await obterProfissionalPorId(id);
+    if (!error && data) prof = data;
+  }
+  if (!prof) prof = PERFIS_MOCK[id];
   if (!prof) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-8">
@@ -58,6 +38,17 @@ async function PerfilProfissional({ params }) {
         </Link>
       </div>
     );
+  }
+
+  let portfolio = prof.portfolio || [];
+  let referencias = prof.referencias || [];
+  if (isSupabaseConfigurado()) {
+    const [resPortfolio, resReferencias] = await Promise.all([
+      obterPortfolio(id),
+      obterReferencias(id),
+    ]);
+    if (!resPortfolio.error && resPortfolio.data) portfolio = resPortfolio.data;
+    if (!resReferencias.error && resReferencias.data) referencias = resReferencias.data;
   }
 
   const whatsappLink = prof.telefone_whatsapp
@@ -110,17 +101,17 @@ async function PerfilProfissional({ params }) {
       {/* Portfólio */}
       <section className="mt-8">
         <h2 className="text-xl font-bold mb-4">Portfólio</h2>
-        <GaleriaPortfolio itens={prof.portfolio} />
+        <GaleriaPortfolio itens={portfolio} />
       </section>
 
       {/* Referências */}
       <section className="mt-8">
         <h2 className="text-xl font-bold mb-4">Referências e recomendações</h2>
-        {prof.referencias.length === 0 ? (
+        {referencias.length === 0 ? (
           <p className="text-gray-500">Nenhuma referência cadastrada.</p>
         ) : (
           <div className="space-y-4">
-            {prof.referencias.map((r) => (
+            {referencias.map((r) => (
               <div
                 key={r.id}
                 className="bg-white rounded-lg border border-gray-200 p-4"

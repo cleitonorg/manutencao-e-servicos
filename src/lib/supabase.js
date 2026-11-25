@@ -13,4 +13,8 @@ export const supabase =
     ? createClient(supabaseUrl, supabaseAnonKey)
     : null;
 
+export function isSupabaseConfigurado() {
+  return Boolean(supabase);
+}
+
 export default supabase;
