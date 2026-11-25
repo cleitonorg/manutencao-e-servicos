@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { validarPedidoOrcamento } from "@/lib/validacoes";
+import { enviarPedidoOrcamento } from "@/services/orcamentos.service";
 
 export default function FormOrcamento({ profissionalId, nomeProfissional }) {
   const [form, setForm] = useState({
@@ -24,11 +26,18 @@ export default function FormOrcamento({ profissionalId, nomeProfissional }) {
       setErro("Preencha os campos obrigatórios.");
       return;
     }
+    const erros = validarPedidoOrcamento(form);
+    if (Object.keys(erros).length > 0) {
+      setErro(Object.values(erros)[0]);
+      return;
+    }
     setStatus("enviando");
     try {
-      // TODO: integrar com Supabase (orcamentos.service.js)
-      console.log("Pedido de orçamento:", { ...form, profissional_id: profissionalId });
-      await new Promise((r) => setTimeout(r, 800));
+      const { error } = await enviarPedidoOrcamento({
+        ...form,
+        profissional_id: profissionalId,
+      });
+      if (error) throw error;
       setStatus("sucesso");
     } catch {
       setStatus("erro");

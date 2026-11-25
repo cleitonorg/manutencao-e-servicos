@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { validarSolicitacaoCadastro } from "@/lib/validacoes";
+import { enviarSolicitacaoCadastro } from "@/services/orcamentos.service";
 
 export default function CadastroProfissionalPage() {
   const [form, setForm] = useState({
@@ -25,11 +27,15 @@ export default function CadastroProfissionalPage() {
       setErro("Preencha os campos obrigatórios.");
       return;
     }
+    const erros = validarSolicitacaoCadastro(form);
+    if (Object.keys(erros).length > 0) {
+      setErro(Object.values(erros)[0]);
+      return;
+    }
     setStatus("enviando");
     try {
-      // TODO: integrar com Supabase (solicitação de cadastro)
-      console.log("Solicitação de cadastro:", form);
-      await new Promise((r) => setTimeout(r, 800));
+      const { error } = await enviarSolicitacaoCadastro(form);
+      if (error) throw error;
       setStatus("sucesso");
     } catch {
       setStatus("erro");
