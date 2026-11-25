@@ -90,15 +90,17 @@ Phase 11 (pending)
 - **Status:** complete
 
 ### Phase 11: Implementação dos próximos passos (2026-11-24)
-- [ ] Baseline commitado (AGENTS.md, rotas `[id]`, análise, exemplos e plano)
-- [ ] Upgrade de segurança do Next.js 16.4.3 → 16.4.6
-- [ ] Testes nativos (`node:test`) e validações dos formulários
-- [ ] Services de escrita sem `.select()` e formulários gravando no Supabase
-- [ ] Leitura real com fallback mock, categorias centralizadas e deep-link `?categoria=`
-- [ ] Home/Header alinhados aos mockups de `exemplos/`
-- [ ] README, lacunas do spec e validação final
+- [x] Baseline commitado (AGENTS.md, rotas `[id]`, análise, exemplos e plano)
+- [x] Upgrade de segurança do Next.js 16.4.3 → 16.4.6
+- [x] Testes nativos (`node:test`) e validações dos formulários
+- [x] Services de escrita sem `.select()` e formulários gravando no Supabase
+- [x] Leitura real com fallback mock, categorias centralizadas e deep-link `?categoria=`
+- [x] Home/Header alinhados aos mockups de `exemplos/`
+- [x] README, lacunas do spec e validação final
 - Plano detalhado: `docs/superpowers/plans/2026-11-24-proximos-passos-mvp.md`
-- **Status:** pending
+- Commits: `ff3f28f` (baseline), `cbce542` (Next.js 16.4.6), `eaf21db` (validações), `7748f97` (escrita no Supabase), `995562e` (leitura), `4e7f569` (home), `9bb4bcc` (docs/lacunas).
+- Verificação final: `npm test` → 8/8 pass, `npm run lint` exit 0, `npm run build` exit 0; `npm run dev` smoke test: `/` com CTA, `/profissionais?categoria=Celulares` renderizando mock de demo (só Carlos Lima). Lacunas de domínio e URLs de depoimentos em `[A confirmar]`.
+- **Status:** complete
 
 ## Decisions Made
 | Decision | Rationale |
