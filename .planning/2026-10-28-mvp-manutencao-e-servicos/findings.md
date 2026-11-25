@@ -66,6 +66,8 @@
 - .planning/2026-10-28-mvp-manutencao-e-servicos/ (plano ativo)
 
 ### Lacunas a confirmar com o usuário (bloqueantes ou não)
+- Domínio final do site (`DOCUMENTACAO_CONSOLIDADA.md:19,96`) — decisão para quando houver dominio registrado.
+- URLs de depoimentos em vídeo: em breve; resolver quando houver referências reais (mockup `exemplos/03-home-neblina.html` guarda exemplos).
 1. Nome final do domínio (". www" incompleto) — [A confirmar]
 2. Estilo: CSS puro vs Tailwind — RESOLVIDO: Tailwind CSS (2026-10-28)
 3. Como será o cadastro dos profissionais (autônomo ou com aprovação) — [Informação ausente]

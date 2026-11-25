@@ -36,15 +36,23 @@ Conforme `DOCUMENTACAO_CONSOLIDADA.md` §4.1:
 
 - `src/app/` — páginas (rotas)
 - `src/components/` — componentes reutilizáveis
-- `src/lib/` — cliente Supabase e validações
+- `src/lib/` — cliente Supabase, validações e mocks locais
 - `src/services/` — funções de acesso a dados
-- `src/styles/` — estilos globais
-- `src/types/` — definições de entidades
+- `src/tests/` não é usado; testes em `tests/` na raiz do repo
+- `src/app/globals.css` — estilos globais (Tailwind 4)
+- `src/types/` — definições de entidades (em andamento)
 
 ## Variáveis de ambiente
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+## Setup (desenvolvimento)
+
+1. `cp .env.local.example .env.local` — **opcional**; sem ele o app roda em modo demonstração (dados mock + aviso no catálogo e formulários).
+2. No SQL Editor do projeto Supabase, aplicar `supabase/schema.sql` antes de configurar as variáveis.
+3. `npm install` → `npm run dev` (localhost:3000).
+4. Validar com `npm test`, `npm run lint` e `npm run build`.
 
 ## Deploy
 
