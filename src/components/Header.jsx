@@ -11,6 +11,9 @@ export default function Header() {
           <Link href="/profissionais" className="hover:text-blue-600">
             Profissionais
           </Link>
+          <Link href="/orcamento" className="hover:text-blue-600">
+            Orçamento
+          </Link>
           <Link href="/como-funciona" className="hover:text-blue-600">
             Como funciona
           </Link>

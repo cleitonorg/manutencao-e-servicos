@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AbaCategorias from "@/components/AbaCategorias";
+import DestaquesHome from "@/components/DestaquesHome";
 import { CATEGORIAS_PADRAO as CATEGORIAS } from "@/lib/categorias";
 
 export default function Home() {
@@ -38,12 +39,45 @@ export default function Home() {
         <AbaCategorias categorias={CATEGORIAS} />
       </section>
 
-      {/* Profissionais em destaque (mock) */}
+      <DestaquesHome />
+
+      {/* Como funciona */}
       <section className="max-w-6xl mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold mb-6">Profissionais em destaque</h2>
-        <p className="text-gray-500">
-          Em breve: lista de profissionais carregada do banco de dados.
+        <h2 className="text-2xl font-bold mb-6">Como funciona</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <h3 className="font-semibold mb-2">1. Busque</h3>
+            <p className="text-gray-600">
+              Escolha a categoria e filtre por cidade, avaliação e disponibilidade.
+            </p>
+          </div>
+          <div>
+            <h3 className="font-semibold mb-2">2. Compare</h3>
+            <p className="text-gray-600">
+              Veja portfólios, referências e orçamentos de cada profissional.
+            </p>
+          </div>
+          <div>
+            <h3 className="font-semibold mb-2">3. Contrate</h3>
+            <p className="text-gray-600">
+              Entre em contato e combine o serviço diretamente com o profissional.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Precisa de um orçamento? */}
+      <section className="max-w-6xl mx-auto px-4 py-12 text-center">
+        <h2 className="text-2xl font-bold mb-3">Precisa de um orçamento?</h2>
+        <p className="text-gray-600 max-w-2xl mx-auto mb-4">
+          Envie sua necessidade e receba propostas de profissionais qualificados.
         </p>
+        <Link
+          href="/orcamento"
+          className="bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700"
+        >
+          Solicitar orçamento
+        </Link>
       </section>
 
       {/* Depoimentos em vídeo (mock) */}
