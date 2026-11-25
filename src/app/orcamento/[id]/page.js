@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import FormOrcamento from "@/components/FormOrcamento";
 
@@ -9,7 +10,24 @@ const PROFISSIONAIS = {
 };
 
 export default function OrcamentoPage({ params }) {
-  const prof = PROFISSIONAIS[params.id];
+  return (
+    <Suspense fallback={<CarregandoFormulario />}>
+      <FormularioOrcamento params={params} />
+    </Suspense>
+  );
+}
+
+function CarregandoFormulario() {
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <p className="text-gray-500">Carregando formulário…</p>
+    </div>
+  );
+}
+
+async function FormularioOrcamento({ params }) {
+  const { id } = await params;
+  const prof = PROFISSIONAIS[id];
 
   if (!prof) {
     return (

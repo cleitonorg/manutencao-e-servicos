@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import GaleriaPortfolio from "@/components/GaleriaPortfolio";
 
@@ -29,7 +30,24 @@ const PROFISSIONAIS = {
 };
 
 export default function ProfissionalPerfilPage({ params }) {
-  const prof = PROFISSIONAIS[params.id];
+  return (
+    <Suspense fallback={<CarregandoPerfil />}>
+      <PerfilProfissional params={params} />
+    </Suspense>
+  );
+}
+
+function CarregandoPerfil() {
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <p className="text-gray-500">Carregando perfil…</p>
+    </div>
+  );
+}
+
+async function PerfilProfissional({ params }) {
+  const { id } = await params;
+  const prof = PROFISSIONAIS[id];
 
   if (!prof) {
     return (

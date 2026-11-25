@@ -1,28 +1,32 @@
 # AGENTS.md — Manutenção e Serviços
 
-## Repo state
-- Documentation/planning only. No application code, package manifest, tests, or build commands exist yet.
-- Canonical spec: `DOCUMENTACAO_CONSOLIDADA.md`. Historical/variant sources live under `Docs/Arquivados/` (chat export + Gemini PDF) and are superseded by the consolidated doc.
-- Language of docs and user-facing copy: Portuguese (pt-BR). Region focus: Serra dos Aimorés.
-- Always respond to the user in Brazilian Portuguese (pt-BR).
-- All documentation and content aimed at the end user must be written in Brazilian Portuguese (pt-BR).
+## Estado do repo
+- MVP em Next.js 16 (App Router, JavaScript) + Tailwind 4 + cliente Supabase scaffoldado. Git em `main`, sem testes nem CI.
+- Spec canônica: `DOCUMENTACAO_CONSOLIDADA.md`. `Docs/Arquivados/` está superseded. Pontos em aberto vêm marcados `[A confirmar]` / `[Informação ausente]` — perguntar, nunca inventar.
+- Decisões já fechadas e erros já resolvidos estão em `.planning/2026-10-28-mvp-manutencao-e-servicos/progress.md` (ponteiro: `.planning/.active_plan`); ler antes de mexer no MVP.
+- `exemplos/` contém 3 mockups HTML da home — referência visual, não código de produção.
+- Idioma: todo texto de UI, comentários, docs e commits em pt-BR. Região: Serra dos Aimorés.
 
-## Product (MVP scope)
-- Local catalog connecting clients to maintenance/service professionals, organized by category, with portfolios, references/reviews, and contact/quote requests.
-- MVP excludes: auth, payments, real-time chat, admin panel, native mobile app. Contact is via form and/or WhatsApp link.
-- Open questions in the spec are marked `[A confirmar]` / `[Informação ausente]` — do not invent answers; ask or keep marked.
+## Realidade do código (não assumir integração pronta)
+- As páginas usam dados mock hardcoded (`PROFISSIONAIS_MOCK`, `PROFISSIONAIS`). Os módulos `src/services/*` existem mas não são importados por ninguém.
+- Os formulários (`FormOrcamento`, `cadastro-profissional`) fazem submit falso: `console.log` + `setTimeout`, com `TODO` apontando para os services. Não há gravação real no Supabase ainda.
+- `src/lib/supabase.js` exporta `null` se `NEXT_PUBLIC_SUPABASE_*` não existirem (dev sem `.env.local`). Todos os services tratam `if (!supabase)` — manter esse padrão, não lançar exceção.
+- `supabase/schema.sql` é aplicado manualmente no SQL Editor do Supabase; não há CLI/migrations.
+- RLS: anon tem INSERT em `orcamentos`/`solicitacoes_cadastro` e SELECT público nas tabelas de catálogo; **não há policy de SELECT** para `orcamentos`/`solicitacoes_cadastro`, então o `.insert(...).select()` dos services falha até essa policy existir.
+- Categorias (`Reformas`, `Computadores`, `Celulares`) estão hardcoded em `src/app/page.js`, `src/app/profissionais/page.js`, `src/app/cadastro-profissional/page.js` e no seed do schema — atualizar nos 4.
 
-## Planned stack (do not expand beyond this)
-- Next.js (App Router) + Supabase (PostgreSQL + Storage) + Vercel.
-- Styling is undecided: CSS puro vs Tailwind — confirm before choosing; both are accepted.
-- Avoid microservices, Docker/Kubernetes, multiple DBs, GraphQL, complex infra, payment gateways, real-time chat before MVP validation.
+## Comandos
+- `npm install` → `cp .env.local.example .env.local` (opcional; sem ele o app roda em modo mock) → `npm run dev` (localhost:3000).
+- `npm run build` (Turbopack + Cache Components) e `npm run lint`. Não existe script de teste nem de typecheck.
 
-## Conventions (when implementing)
-- Routes lowercase (`/profissionais`, `/profissionais/[id]`, `/orcamento`, `/como-funciona`).
-- Components PascalCase (`CardProfissional.jsx`); services in `services/`; Supabase client + validations in `lib/`; no direct DB queries scattered in components.
-- Identifiers in clear pt-BR or simple English (e.g. `obterProfissionais`, `enviarPedidoOrcamento`).
-- Follow folder layout in consolidated doc §4.1.
+## Gotchas do Next.js 16 (verificados)
+- `params` de rota dinâmica é **Promise**: usar `await params` em server component. As rotas `[id]` já fazem isso num filho async envolto em `<Suspense>`; não regressir para `useParams` em client component (isso quebrou o prerender).
+- `cacheComponents: true` e `partialPrefetching: true` em `next.config.ts` forçam prerender: não usar `new Date()`/valores dependentes de tempo no render (já quebrou o build; `Footer` tem ano fixo 2026).
+- Tailwind 4 não usa `postcss.config` nem `tailwind.config`: é carregado pela regra do Turbopack em `next.config.ts` (`@tailwindcss/turbopack`). CSS global em `src/app/globals.css`; o `src/styles/` citado no README não existe.
+- Projeto é JS com alias `@/*` → `src/*` (`jsconfig.json`); dependências TS existem mas não há `tsconfig.json`. Não introduzir TypeScript sem alinhar com o usuário.
 
-## Notes
-- No git repository is initialized in this workspace.
-- Process skills (brainstorming before new features, systematic-debugging for bugs) are enforced by the environment.
+## Convenções
+- Rotas minúsculas (`/profissionais`, `/profissionais/[id]`, `/orcamento`, `/orcamento/[id]`, `/como-funciona`, `/cadastro-profissional`).
+- Componentes PascalCase em `src/components/`; acesso a dados em `src/services/`; cliente Supabase e validações em `src/lib/`; tipos/formatos de entidade em `src/types/`. Nenhuma query direta em componente.
+- Identificadores em pt-BR claro ou inglês simples (`obterProfissionais`, `enviarPedidoOrcamento`).
+- Escopo MVP: sem auth, pagamentos, chat em tempo real, painel admin ou app nativo; não expandir a stack (Next + Supabase + Vercel).

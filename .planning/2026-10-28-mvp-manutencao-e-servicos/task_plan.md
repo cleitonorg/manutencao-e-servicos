@@ -4,10 +4,10 @@
 Construir o MVP do site "Manutenção e Serviços": catálogo web (Next.js + Supabase + Vercel) conectando clientes a profissionais de manutenção em Serra dos Aimorés, com perfis, portfólios, referências e pedido de orçamento via formulário/WhatsApp. Sem auth, pagamentos, chat em tempo real ou painel admin.
 
 ## Next Step
-MVP preparado e build passando. Deploy/integração real (Supabase + Vercel) fica a cargo do usuário conforme README.md. Evoluções futuras listadas na Phase 10.
+Executar `docs/superpowers/plans/2026-11-24-proximos-passos-mvp.md` (6 tasks), começando pelo baseline e pelo upgrade de segurança do Next.js. Cada task termina com commit e validação própria.
 
 ## Current Phase
-Phase 10 (complete)
+Phase 11 (pending)
 
 ## Phases
 
@@ -88,6 +88,17 @@ Phase 10 (complete)
 - [x] Listar evoluções futuras (login profissional, chat, avaliações moderadas, painel, mapa, notificações)
 - [x] Código organizado conforme convenções (rotas minúsculas, componentes PascalCase, services/, lib/)
 - **Status:** complete
+
+### Phase 11: Implementação dos próximos passos (2026-11-24)
+- [ ] Baseline commitado (AGENTS.md, rotas `[id]`, análise, exemplos e plano)
+- [ ] Upgrade de segurança do Next.js 16.4.3 → 16.4.6
+- [ ] Testes nativos (`node:test`) e validações dos formulários
+- [ ] Services de escrita sem `.select()` e formulários gravando no Supabase
+- [ ] Leitura real com fallback mock, categorias centralizadas e deep-link `?categoria=`
+- [ ] Home/Header alinhados aos mockups de `exemplos/`
+- [ ] README, lacunas do spec e validação final
+- Plano detalhado: `docs/superpowers/plans/2026-11-24-proximos-passos-mvp.md`
+- **Status:** pending
 
 ## Decisions Made
 | Decision | Rationale |

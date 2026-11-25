@@ -82,3 +82,22 @@
 
 ### Fora do escopo MVP (não implementar)
 - Pagamento online; app mobile nativo; painel admin completo; chat em tempo real (sockets); IA complexa; relatórios avançados; sistema financeiro; múltiplos DBs; microserviços; blockchain.
+
+## Auditoria 2026-11-24 (evidências locais)
+- Working tree sujo em `main`: `AGENTS.md` reescrito para pt-BR com o estado real do código; `src/app/orcamento/[id]/page.js` e `src/app/profissionais/[id]/page.js` corrigidos para `await params` dentro de `<Suspense>` (Next.js 16); `exemplos/` não rastreado com 3 mockups HTML da home.
+- `npm run lint` passa (exit 0). `npm run build` gera 9 rotas (duas com Partial Prerender), mas o CLI do Next.js 16.4.3 intercepta a 1ª execução com `SecurityFatalError`; a 2ª execução termina com exit 0 e mantém o aviso.
+- `npm audit --omit=dev`: `next@16.4.3` tem 1 advisory agrupado (moderado) com 7 entradas, incluindo cache poisoning em Cache Components com route params — relevante porque `next.config.ts` habilita `cacheComponents` e há rotas dinâmicas com PPR. Correção: `next@16.4.6`, sem major bump.
+- O comando sugerido pelo CLI (`next upgrade --agent=security --internal-nudge-id=...`) altera dependências/lockfile e não foi executado: depende de decisão do usuário, inclusive sobre usar worktree separado.
+- Divergência de plano: `task_plan.md` marca Phase 10 como complete, enquanto `progress.md` (sessão 2026-10-28) ainda diz fases 3/4 in_progress.
+
+### Auditoria cruzada (duas lanes, verificada no arquivo)
+- `grep` por imports de `@/services` ou `@/lib/validacoes` em `src/`: zero ocorrências. Os 7 services existem mas não são usados em produção.
+- `src/components/FormOrcamento.jsx:29-32` e `src/app/cadastro-profissional/page.js:30-32`: `TODO` + `console.log` + `setTimeout(800)`; `catch` inalcançável; nenhuma gravação.
+- `supabase/schema.sql:89-96`: só `for insert with check (true)` em `orcamentos`/`solicitacoes_cadastro`; `src/services/orcamentos.service.js:5,11-14` usa `.insert(...).select()` → quebra sem policy SELECT.
+- `src/app/page.js:42-57`: destaques e depoimentos são textos "Em breve"; `VideoPlayer` não é importado. `src/app/page.js:4`, `src/app/profissionais/page.js:35`, `src/app/cadastro-profissional/page.js:83-85` e seed do schema mantêm categorias hardcoded.
+- `src/app/profissionais/page.js:38-46`: filtro em memória; não lê `?categoria=` enviado por `AbaCategorias`.
+- `src/components/Header.jsx:10-17`: só "Profissionais" e "Como funciona"; sem link de orçamento/CTA.
+- `exemplos/` contém `README.md` + 3 mockups (`01-home-aco-suave.html`, `02-home-terra-acolhedora.html`, `03-home-neblina.html`) com hero, categorias, destaques, depoimentos, "como funciona" e CTA de orçamento.
+- `README.md:41` cita `src/styles/` (inexistente; CSS real em `src/app/globals.css`) e `README.md:44-51` não ensina a aplicar `supabase/schema.sql` no SQL Editor.
+- Lacunas do documento ainda em aberto: domínio final (`DOCUMENTACAO_CONSOLIDADA.md:19,96`), campo `data` de referências (`:402`) vs `created_at` do schema, e seed de profissionais de exemplo (`findings.md:81`).
+- Verificação final em 2026-11-24: `npm run lint` exit 0; `npm run build` 1ª execução exit 1 (`SecurityFatalError`), retry imediato exit 0 com aviso de vulnerabilidade; 9 rotas geradas (duas com PPR).
