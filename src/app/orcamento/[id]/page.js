@@ -27,8 +27,9 @@ async function FormularioOrcamento({ params }) {
   if (isSupabaseConfigurado()) {
     const { data, error } = await obterProfissionalPorId(id);
     if (!error && data) prof = data;
+  } else {
+    prof = NOMES_PROFISSIONAIS_MOCK[id];
   }
-  if (!prof) prof = NOMES_PROFISSIONAIS_MOCK[id];
 
   if (!prof) {
     return (

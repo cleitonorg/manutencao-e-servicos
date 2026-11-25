@@ -27,8 +27,9 @@ async function PerfilProfissional({ params }) {
   if (isSupabaseConfigurado()) {
     const { data, error } = await obterProfissionalPorId(id);
     if (!error && data) prof = data;
+  } else {
+    prof = PERFIS_MOCK[id];
   }
-  if (!prof) prof = PERFIS_MOCK[id];
   if (!prof) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-8">
